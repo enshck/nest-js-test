@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { Cat } from './interfaces/cat.interface';
+import { ICatData } from './interfaces/cat.interface';
 
 @Injectable()
 export class CatsService {
-  private readonly cats: Cat[] = [];
+  private readonly cats: ICatData[] = [];
 
-  create(cat: Cat) {
+  create(cat: ICatData) {
     this.cats.push(cat);
   }
-  findAll(): Cat[] {
+  findAll(): ICatData[] {
     return this.cats;
   }
-  findCatByName(name: string): Cat | null {
+  findCatByName(name: string): ICatData | null {
     return (
       this.cats.find((elem) =>
         elem.name.toLowerCase().includes(name.toLowerCase()),

@@ -12,11 +12,12 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '../../guard/auth.guard';
 import { JoiValidationPipe } from '../../common/joiValidationPipe';
-import catSchema from '../../common/validationSchemas/cat.validation';
+import { catModel } from '../../common/validationSchemas/cat.validation';
 
 import { CreateCatDto, ICatData } from './interfaces/cat.interface';
 import { CatsService } from './cats.service';
-import { HttpExceptionFilter } from '../../common/http-exception.filter';
+import { HttpExceptionFilter } from '../../common/filters/http-exception.filter';
+import { ValidationExceptionFilter } from '../../common/filters/validation-exception.filter';
 
 @Controller('cats')
 @UseFilters(HttpExceptionFilter)
@@ -30,7 +31,8 @@ export class CatsController {
   }
 
   @Post()
-  @UsePipes(new JoiValidationPipe(catSchema))
+  @UsePipes(new JoiValidationPipe(catModel))
+  @UseFilters(ValidationExceptionFilter)
   createCat(@Body() data: CreateCatDto): string {
     this.catsService.create(data);
     return `${HttpStatus.CREATED}`;
