@@ -1,21 +1,22 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { CatDocument, Cat } from '../../common/mongoSchemas/cat.schema';
+
 import { ICatData } from './interfaces/cat.interface';
 
 @Injectable()
 export class CatsService {
-  private readonly cats: ICatData[] = [];
+  constructor(@InjectModel(Cat.name) private catModel: Model<CatDocument>) {}
 
-  create(cat: ICatData) {
-    this.cats.push(cat);
+  async create(cat: ICatData): Promise<Cat> {
+    const createdCat = new this.catModel(cat);
+    return createdCat.save();
   }
   findAll(): ICatData[] {
-    return this.cats;
+    return [];
   }
   findCatByName(name: string): ICatData | null {
-    return (
-      this.cats.find((elem) =>
-        elem.name.toLowerCase().includes(name.toLowerCase()),
-      ) || null
-    );
+    return null;
   }
 }
